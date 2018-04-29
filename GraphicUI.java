@@ -91,6 +91,19 @@ public class GraphicUI extends JFrame
 		        	g.drawLine(alienShipXpos, alienShipYpos, alienShipXpos+500, alienShipYpos);
 		        }
 		    }
+		    
+		    //Draw meteor
+			for (int i=0; i < GuiSpace.Meteors.size(); i++)
+			{
+				if( GuiSpace.Meteors.get(i).getMeteorXpos() != -1 && GuiSpace.Meteors.get(i).getMeteorYpos() != -1)
+				{
+					int meteorXpos = GuiSpace.Meteors.get(i).getMeteorXpos();
+					int meteorYpos = GuiSpace.Meteors.get(i).getMeteorYpos();
+	
+					g.setColor(Color.WHITE);
+					g.fillArc(meteorXpos, meteorYpos, GuiSpace.Meteors.get(i).getMeteorWidth(), GuiSpace.Meteors.get(i).getMeteorHeight(), 0, 360);
+				}
+			}
 
 		}
 		
@@ -112,7 +125,7 @@ public class GraphicUI extends JFrame
 	            
 	            repaint();
 	            /*---  Magic command to faster graphic, but just under LINUX! ---*/
-	            // Toolkit.getDefaultToolkit().sync();
+	             Toolkit.getDefaultToolkit().sync();
 	        }
 	    }
 	    

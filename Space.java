@@ -1,5 +1,7 @@
 package SpaceImpact_package;
 
+import java.util.Vector;
+
 
 
 public class Space implements java.io.Serializable
@@ -23,8 +25,8 @@ public class Space implements java.io.Serializable
 	public int alienShipYpos  = -1;
 	public int alienShipLaser = -1;
 	
-	//--- Meteor ---
-	
+	//--- Meteors ---
+	public Vector<Meteor> Meteors = new Vector<Meteor>(0);
 	
 	//--- Game border ---
 	

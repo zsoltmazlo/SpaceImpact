@@ -1,6 +1,7 @@
 package SpaceImpact_package;
 
 
+import java.util.Random;
 import java.util.TimerTask;
 
 
@@ -19,7 +20,11 @@ public class GameCore extends TimerTask
 	
 	// Counts elapsed time
 	private int GameCoreCounter = 0;
-		
+	
+	private int MeteorCounter = 0;
+	
+	private Random rand;
+	
 	
 	//---Moving my ship---
 	private void myShipMove()
@@ -94,6 +99,51 @@ public class GameCore extends TimerTask
 		
 	}
 	
+	//---Creating, moving and removing the meteors ---	
+	private void meteorMove()
+	{
+
+		//Creating meteor in every 2sec
+		if( MeteorCounter >= 50 && CoreSpace.Meteors.size() <= 10 )
+		{
+			Meteor TempMet = new Meteor();
+			
+			TempMet.writeMeteorXpos(650);
+			TempMet.writeMeteorYpos(rand.nextInt(480));
+			
+			CoreSpace.Meteors.addElement(TempMet);
+			
+			
+			System.out.println("> Creating meteor");
+			System.out.println("Number of Meteors: "+CoreSpace.Meteors.size());
+			
+			MeteorCounter = 0;
+		}
+		MeteorCounter++;
+		
+		
+		//Moving the meteors
+		int meteorXPosL = 0;
+		for (int i=0; i<CoreSpace.Meteors.size(); i++)
+		{
+			meteorXPosL = CoreSpace.Meteors.get(i).getMeteorXpos() - CoreSpace.Meteors.get(i).getMeteorSpeed();
+			CoreSpace.Meteors.get(i).writeMeteorXpos(meteorXPosL);
+		}
+		
+		
+		//Removing meteor if it leaves the screen
+		for (int i=0; i < CoreSpace.Meteors.size(); i++)
+		{
+			if ( CoreSpace.Meteors.get(i).getMeteorXpos() < -10 )
+			{
+				CoreSpace.Meteors.remove(i);
+				
+				System.out.println("> Removing meteor");
+			}
+		}
+		
+	}
+	
 	
 	//This function runs in every 40ms
 	public void run()
@@ -102,6 +152,7 @@ public class GameCore extends TimerTask
 		myShipMove();
 		otherShipMove();
 		alienShipMove();
+		meteorMove();
 		
 		
 		//Count elapsed time
@@ -120,6 +171,9 @@ public class GameCore extends TimerTask
 		CoreSpace = new Space();
 		myControl = LocalControl;
 		otherControl = RemoteControl;
+		
+		rand = new Random();
+		
 	}
 	
 }
