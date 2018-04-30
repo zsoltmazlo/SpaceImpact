@@ -21,9 +21,25 @@ public class GameCore extends TimerTask
 	// Counts elapsed time
 	private int GameCoreCounter = 0;
 	
+	// Counts elapsed time for meteors
 	private int MeteorCounter = 0;
 	
+	// Counts elapsed time for alien ships
+	private int AlienCounter = 0;
+	
+	// Variables depending on difficulty level
+	private int MeteorWidth   = 0;
+	private int MeteorHeight  = 0;
+	private int MeteorSpeed   = 0;
+	private int MaxMeteors    = 0;
+	private int MaxAlienShips = 0;
+	private int AlienShipSpeed= 0;
+	
+	// Random number generator
 	private Random rand;
+	
+	// Probe Difficulty lvl variable
+	private int DiffLvl = 0;
 	
 	
 	//---Moving my ship---
@@ -64,37 +80,65 @@ public class GameCore extends TimerTask
 	private void alienShipMove()
 	{
 		
-		if( GameCoreCounter == 50 )
+		// Creating an alien ship every 4sec
+		if( AlienCounter >= 100 && CoreSpace.Aliens.size() < MaxAlienShips )
 		{
-			//After 2sec the alien ship appears
-			CoreSpace.alienShipXpos = 700;
-			CoreSpace.alienShipYpos = 300;
+			//AlienShip TempAlien = new AlienShip();
+			AlienShip TempAlien = new AlienShip( 600, rand.nextInt(480), -1 , AlienShipSpeed );
+			
+			CoreSpace.Aliens.addElement(TempAlien);
+			
+			AlienCounter = 0;
+		}
+		AlienCounter++;	
+		
+
+		// Generating direction of alien ship
+		for (int i=0; i<CoreSpace.Aliens.size(); i++)
+		{
+			if( AlienCounter % 10 == 0 && CoreSpace.Aliens.get(i).getAlienShipYpos() < 460 && CoreSpace.Aliens.get(i).getAlienShipYpos() > 20)
+			{
+				CoreSpace.Aliens.get(i).writeAlienShipYDirection(rand.nextInt(2));
+				
+			}
+			
+			if( CoreSpace.Aliens.get(i).getAlienShipYpos() >= 460 )
+			{
+				CoreSpace.Aliens.get(i).writeAlienShipYDirection(0);
+			}
+			
+			if( CoreSpace.Aliens.get(i).getAlienShipYpos() <= 20 )
+			{
+				CoreSpace.Aliens.get(i).writeAlienShipYDirection(1);
+			}
 		}
 			
-		
-		if( 100 <= GameCoreCounter && GameCoreCounter <= 300)
+		int AlienShipXPosN = 0;
+		int AlienShipYPosN = 0;
+		for (int i=0; i<CoreSpace.Aliens.size(); i++)
 		{
-			//the alien ship moves
-			CoreSpace.alienShipXpos = CoreSpace.alienShipXpos - 3;
+			// Horizontal movement of alien ship
+			AlienShipXPosN = CoreSpace.Aliens.get(i).getAlienShipXpos() - CoreSpace.Aliens.get(i).getAlienShipSpeed();
+			CoreSpace.Aliens.get(i).writeAlienShipXpos(AlienShipXPosN);
+			
+			// Vertical movement of alien ship
+			switch (CoreSpace.Aliens.get(i).getAlienShipYDirection())
+			{
+				case -1: CoreSpace.Aliens.get(i).writeAlienShipYpos(CoreSpace.Aliens.get(i).getAlienShipYpos()); break;
+				case  0: AlienShipYPosN = CoreSpace.Aliens.get(i).getAlienShipYpos() - 3;
+				 		 CoreSpace.Aliens.get(i).writeAlienShipYpos(AlienShipYPosN); break;
+				case  1: AlienShipYPosN = CoreSpace.Aliens.get(i).getAlienShipYpos() + 3;
+		 				 CoreSpace.Aliens.get(i).writeAlienShipYpos(AlienShipYPosN); break;
+			}
 		}
 		
-		if( 300 <= GameCoreCounter && GameCoreCounter <= 320)
+		//Removing meteor if it leaves the screen
+		for (int i=0; i < CoreSpace.Aliens.size(); i++)
 		{
-			//the alien ship turns on the laser
-			CoreSpace.alienShipLaser = 1;
-		}
-		else
-		{
-			CoreSpace.alienShipLaser = -1;
-		}
-		
-		
-		if( GameCoreCounter == 350)
-		{
-			//the alien ship disappears
-			CoreSpace.alienShipXpos = -1;
-			CoreSpace.alienShipYpos = -1;
-			CoreSpace.alienShipLaser = -1;
+			if ( CoreSpace.Aliens.get(i).getAlienShipXpos() < -10 )
+			{
+				CoreSpace.Aliens.remove(i);
+			}
 		}
 		
 	}
@@ -104,18 +148,16 @@ public class GameCore extends TimerTask
 	{
 
 		//Creating meteor in every 2sec
-		if( MeteorCounter >= 50 && CoreSpace.Meteors.size() <= 10 )
+		if( MeteorCounter >= 50 && CoreSpace.Meteors.size() < MaxMeteors )
 		{
-			Meteor TempMet = new Meteor();
-			
-			TempMet.writeMeteorXpos(650);
-			TempMet.writeMeteorYpos(rand.nextInt(480));
+			//Meteor TempMet = new Meteor();
+			Meteor TempMet = new Meteor( 650, rand.nextInt(480), MeteorWidth, MeteorHeight, MeteorSpeed );
 			
 			CoreSpace.Meteors.addElement(TempMet);
 			
 			
-			System.out.println("> Creating meteor");
-			System.out.println("Number of Meteors: "+CoreSpace.Meteors.size());
+			//System.out.println("> Creating meteor");
+			//System.out.println("Number of Meteors: "+CoreSpace.Meteors.size());
 			
 			MeteorCounter = 0;
 		}
@@ -138,10 +180,39 @@ public class GameCore extends TimerTask
 			{
 				CoreSpace.Meteors.remove(i);
 				
-				System.out.println("> Removing meteor");
+				//System.out.println("> Removing meteor");
 			}
 		}
 		
+	}
+	
+	
+	// Variables depending on difficulty level
+	public void diffMode()
+	{
+		switch (DiffLvl)
+		{
+		case 0:	MeteorWidth = 10;
+				MeteorHeight = 10;
+				MeteorSpeed = 1;
+				MaxMeteors = 4; 
+				MaxAlienShips = 3;
+				AlienShipSpeed = 2; break;
+				
+		case 1:	MeteorWidth = 15;
+				MeteorHeight = 15;
+				MeteorSpeed = 2;
+				MaxMeteors = 6;
+				MaxAlienShips = 4;
+				AlienShipSpeed = 3; break;
+		
+		case 2:	MeteorWidth = 20;
+				MeteorHeight = 20;
+				MeteorSpeed = 3;
+				MaxMeteors = 8;
+				MaxAlienShips = 5;
+				AlienShipSpeed = 4; break;
+		}
 	}
 	
 	
@@ -149,6 +220,7 @@ public class GameCore extends TimerTask
 	public void run()
 	{
 		//Generating the Space in the game
+		diffMode();
 		myShipMove();
 		otherShipMove();
 		alienShipMove();

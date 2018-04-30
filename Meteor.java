@@ -1,14 +1,31 @@
 package SpaceImpact_package;
 
 
-
 public class Meteor
 {
-	private int meteorXpos = -1;
-	private int meteorYpos = -1;
-	private int meteorWidth  = 10;
-	private int meteorHeight = 10;
-	private int meteorSpeed = 3;
+	private int meteorXpos;
+	private int meteorYpos;
+	private int meteorWidth;
+	private int meteorHeight;
+	private int meteorSpeed;
+	
+	public Meteor()
+	{
+		this.meteorXpos = -1;
+		this.meteorYpos = -1;
+		this.meteorWidth = 10;
+		this.meteorHeight = 10;
+		this.meteorSpeed = 1;
+	}
+	
+	public Meteor( int XPos, int YPos, int Width, int Height, int Speed )
+	{
+		this.meteorXpos = XPos;
+		this.meteorYpos = YPos;
+		this.meteorWidth = Width;
+		this.meteorHeight = Height;
+		this.meteorSpeed = Speed;
+	}
 	
 	public int getMeteorXpos()
 	{

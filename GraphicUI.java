@@ -71,26 +71,29 @@ public class GraphicUI extends JFrame
 	        
 		    
 	        //Draw alienShip
-		    if( GuiSpace.alienShipXpos != -1 && GuiSpace.alienShipYpos != -1)
-		    {
-				int alienShipXpos = GuiSpace.alienShipXpos;
-				int alienShipYpos = GuiSpace.alienShipYpos;
-					
-				g.setColor(Color.GREEN);
-			    int alienxpoints[] = {alienShipXpos, alienShipXpos+10, alienShipXpos+30, alienShipXpos+100, alienShipXpos+80, alienShipXpos+100, alienShipXpos+30, alienShipXpos+10};
-			    int alienypoints[] = {alienShipYpos, alienShipYpos+10, alienShipYpos+20,  alienShipYpos+20, alienShipYpos   ,  alienShipYpos-20, alienShipYpos-20, alienShipYpos-10};
-			    int aliennpoints = 8;
-			    g.fillPolygon(alienxpoints, alienypoints, aliennpoints);
-			         
-			    g.setColor(Color.WHITE);
-			    g.fillArc(alienShipXpos+30, alienShipYpos-10, 10, 20, 0, 360);
-			    
-		        if(GuiSpace.alienShipLaser == 1)
-		        {
-		        	g.setColor(Color.GREEN);
-		        	g.drawLine(alienShipXpos, alienShipYpos, alienShipXpos-500, alienShipYpos);
-		        }
-		    }
+			for (int i=0; i < GuiSpace.Aliens.size(); i++)
+			{
+			    if( GuiSpace.Aliens.get(i).getAlienShipXpos() != -1 && GuiSpace.Aliens.get(i).getAlienShipYpos() != -1)
+			    {
+					int alienShipXpos = GuiSpace.Aliens.get(i).getAlienShipXpos();
+					int alienShipYpos = GuiSpace.Aliens.get(i).getAlienShipYpos();
+						
+					g.setColor(Color.GREEN);
+				    int alienxpoints[] = {alienShipXpos, alienShipXpos+10, alienShipXpos+30, alienShipXpos+100, alienShipXpos+80, alienShipXpos+100, alienShipXpos+30, alienShipXpos+10};
+				    int alienypoints[] = {alienShipYpos, alienShipYpos+10, alienShipYpos+20,  alienShipYpos+20, alienShipYpos   ,  alienShipYpos-20, alienShipYpos-20, alienShipYpos-10};
+				    int aliennpoints = 8;
+				    g.fillPolygon(alienxpoints, alienypoints, aliennpoints);
+				         
+				    g.setColor(Color.WHITE);
+				    g.fillArc(alienShipXpos+30, alienShipYpos-10, 10, 20, 0, 360);
+				    
+//			        if(GuiSpace.alienShipLaser == 1)
+//			        {
+//			        	g.setColor(Color.GREEN);
+//			        	g.drawLine(alienShipXpos, alienShipYpos, alienShipXpos-500, alienShipYpos);
+//			        }
+			    }
+			}
 		    
 		    //Draw meteor
 			for (int i=0; i < GuiSpace.Meteors.size(); i++)

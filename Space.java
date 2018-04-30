@@ -27,6 +27,7 @@ public class Space implements java.io.Serializable
 	
 	//--- Meteors ---
 	public Vector<Meteor> Meteors = new Vector<Meteor>(0);
+	public Vector<AlienShip> Aliens = new Vector<AlienShip>(0);
 	
 	//--- Game border ---
 	
