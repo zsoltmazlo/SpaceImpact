@@ -36,6 +36,7 @@ public class GameCore extends TimerTask
 	private int MeteorSpeed   = 0;
 	private int MaxMeteors    = 0;
 	private int MaxAlienShips = 0;
+	private int AlienSpawnTime= 0;
 	private int AlienShipSpeed= 0;
 	
 	// Random number generator
@@ -84,7 +85,7 @@ public class GameCore extends TimerTask
 	{
 		
 		// Creating an alien ship every 4sec
-		if( AlienCounter >= 100 && CoreSpace.Aliens.size() < MaxAlienShips )
+		if( AlienCounter >= AlienSpawnTime && CoreSpace.Aliens.size() < MaxAlienShips )
 		{
 			//AlienShip TempAlien = new AlienShip();
 			AlienShip TempAlien = new AlienShip( 600, rand.nextInt(480), -1 , AlienShipSpeed );
@@ -200,21 +201,24 @@ public class GameCore extends TimerTask
 				MeteorSpeed = 1;
 				MaxMeteors = 4; 
 				MaxAlienShips = 3;
-				AlienShipSpeed = 2; break;
+				AlienShipSpeed = 2;
+				AlienSpawnTime = 100; break;
 				
 		case 1:	MeteorWidth = 15;
 				MeteorHeight = 15;
 				MeteorSpeed = 2;
 				MaxMeteors = 6;
 				MaxAlienShips = 4;
-				AlienShipSpeed = 3; break;
+				AlienShipSpeed = 3;
+				AlienSpawnTime = 50; break;
 		
 		case 2:	MeteorWidth = 20;
 				MeteorHeight = 20;
 				MeteorSpeed = 3;
 				MaxMeteors = 8;
 				MaxAlienShips = 5;
-				AlienShipSpeed = 4; break;
+				AlienShipSpeed = 4;
+				AlienSpawnTime = 25; break;
 		}
 	}
 	
