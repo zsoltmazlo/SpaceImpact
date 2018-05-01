@@ -16,10 +16,13 @@ public class GraphicUI extends JFrame
 	
 
 	//Space for GUI
-	private Space GuiSpace;
+	public Space GuiSpace;
 	
 	//Creating Control for GUI
 	protected ShipControl GuiControl = new ShipControl();
+	
+	private NetClient GuiClient;
+	private int Multiplayer = 0;
 	
 	
 	public class DrawCanvas extends JPanel
@@ -129,6 +132,11 @@ public class GraphicUI extends JFrame
 	            repaint();
 	            /*---  Magic command to faster graphic, but just under LINUX! ---*/
 	            // Toolkit.getDefaultToolkit().sync();
+	            
+	            if(Multiplayer == 1)
+	            {
+	            	GuiClient.send(GuiControl);
+	            }
 	        }
 	    }
 	    
@@ -203,6 +211,12 @@ public class GraphicUI extends JFrame
 	      KeyListener listener = new MyKeyListener();
 		  addKeyListener(listener);
 		  setFocusable(true);
+	}
+	
+	public void setGuiClient(NetClient ClientToReceive)
+	{
+		GuiClient = ClientToReceive;
+		Multiplayer = 1;
 	}
 
 }

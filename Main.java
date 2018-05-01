@@ -13,7 +13,7 @@ public class Main {
 	public static void main(String[] args)
 	{
 		
-		//Java swing Option dialog
+		//--- Java swing Option dialog ---
 		Object[] options = {"Singleplayer",
 		                    "Server",
 		                    "Client"};
@@ -29,69 +29,64 @@ public class Main {
 		
 		
 		//--- Creating the main objects of the game ---
-		GraphicUI TheGraphicUI = new GraphicUI();
-		
-		NetServer Srv = new NetServer();
-		NetClient Clt = new NetClient(TheGraphicUI.GuiControl);
-		
-		GameCore  TheGameCore  = new GameCore(TheGraphicUI.GuiControl, Srv.ServerCnt);
-		
-		Srv.SetServerSpace(TheGameCore.CoreSpace);
-		
+		GraphicUI TheGraphicUI;
+		GameCore  TheGameCore;
+		NetServer TheNetServer;
+		NetClient TheNetClient;
 		
 		//Creating Timer for the GameCore
 	   	Timer CoreTimer     = new Timer();
-	   	long CoreTimerDelay = 40; //0.04s = 1/2
+	   	long CoreTimerDelay = 40; //0.04s = 1/25
 	   	
 		
-		//--- Initialize game for the selected game mode ---
+		//--- Configuring the program for the selected game mode ---
 		switch (GameMode)
 		{
-			//Singleplayer
+			// Singleplayer mode
 			case 0: System.out.println("--- Singleplayer mod ---");
 					
+					TheGraphicUI = new GraphicUI();
+					TheGameCore  = new GameCore(TheGraphicUI.GuiControl);
+			
 					TheGraphicUI.GraphicUIStart( TheGameCore.CoreSpace );
 					CoreTimer.scheduleAtFixedRate(TheGameCore, CoreTimerDelay, CoreTimerDelay);
-	        		break;
+	        		
+					break;
 	        
-	        //Multiplayer/Server
+	        // Multiplayer/Server mode
 			case 1: System.out.println("--- Multiplayer/Sever mod ---");
+					
+					TheGraphicUI = new GraphicUI();
+					TheGameCore  = new GameCore(TheGraphicUI.GuiControl);
 					
 					TheGraphicUI.GraphicUIStart(TheGameCore.CoreSpace);
 					CoreTimer.scheduleAtFixedRate(TheGameCore, CoreTimerDelay, CoreTimerDelay);
-					Srv.connect("localhost");
+					
+					TheNetServer = new NetServer(TheGameCore);
+					TheNetServer.connect("localhost");
+					
+					TheGameCore.setCoreServer(TheNetServer);
+					
 					break;
         
-			//Multiplayer/Client
+			// Multiplayer/Client mode
 			case 2: System.out.println("--- Multiplayer/Client mod ---");
 					
-					TheGraphicUI.GraphicUIStart(Clt.ClientSpace);
-					Clt.connect("localhost");
+					TheGraphicUI = new GraphicUI();
+					
+					TheNetClient = new NetClient(TheGraphicUI);
+					TheNetClient.connect("localhost");
+					
+					TheGraphicUI.GraphicUIStart(new Space());
+					
+					TheGraphicUI.setGuiClient(TheNetClient);
+					
 					break;
 					
 			default: System.out.println("--- Menu error ---");
-                 	 break;
+                 	 
+					break;
          }
-		
-
-		//--- Main thread for network communication runs in every 0.04s ---
-		while(true)
-		{   			   
-			
-			if( GameMode == 1 )
-			{
-				//Server
-				Srv.send();
-			}
-			
-			if( GameMode == 2 )
-			{
-				//Client
-				Clt.send();
-			}
-			
-			try{Thread.sleep(20);}catch(InterruptedException e){System.out.println(e);}
-		}
 
 	}
 }

@@ -1,8 +1,11 @@
 package SpaceImpact_package;
 
 
-public class Meteor
+public class Meteor implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private int meteorXpos;
 	private int meteorYpos;
 	private int meteorWidth;

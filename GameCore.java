@@ -16,7 +16,10 @@ public class GameCore extends TimerTask
 	private ShipControl myControl;
 	
 	// Control for remote player
-	private ShipControl otherControl;
+	public ShipControl otherControl;
+	
+	private NetServer CoreServer;
+	private int Multiplayer = 0;
 	
 	// Counts elapsed time
 	private int GameCoreCounter = 0;
@@ -235,17 +238,28 @@ public class GameCore extends TimerTask
 		{
 			GameCoreCounter = 0;
 		}
+		
+		if(Multiplayer == 1)
+		{
+			CoreServer.send(CoreSpace);
+		}
 	}
 	
 	// GameCore constructor
-	GameCore(ShipControl LocalControl, ShipControl RemoteControl)
+	GameCore(ShipControl LocalControl)
 	{
 		CoreSpace = new Space();
 		myControl = LocalControl;
-		otherControl = RemoteControl;
+		otherControl = new ShipControl();
 		
 		rand = new Random();
 		
+	}
+	
+	public void setCoreServer(NetServer ServerToSend)
+	{
+		CoreServer = ServerToSend;
+		Multiplayer = 1;
 	}
 	
 }

@@ -6,6 +6,6 @@ abstract class NetConnection {
 
 	abstract public void disconnect();
 
-	abstract public void send();
+	//abstract public void send();
 
 }

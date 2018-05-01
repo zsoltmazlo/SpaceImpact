@@ -1,8 +1,11 @@
 package SpaceImpact_package;
 
 
-public class AlienShip
+public class AlienShip implements java.io.Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
+	
 	private int AlienShipXpos;
 	private int AlienShipYpos;
 	private int AlienShipYDirection;

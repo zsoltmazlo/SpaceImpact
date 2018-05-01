@@ -8,15 +8,13 @@ import java.net.*;
 public class NetClient extends NetConnection
 {
 	
-	public Space ClientSpace = new Space();
-	private ShipControl ClientCnt;
+	private GraphicUI ClientGui;
 	
 	
-	NetClient(ShipControl CntToSend)
+	NetClient(GraphicUI GraphicUIToWrite)
 	{
-		ClientCnt = CntToSend;
+		ClientGui = GraphicUIToWrite;
 	}
-	
 	
 	private Socket socket = null;
 	private ObjectOutputStream out = null;
@@ -32,19 +30,9 @@ public class NetClient extends NetConnection
 				while (true)
 				{
 					Space received = (Space) in.readObject();
+					ClientGui.GuiSpace = received;
 					
-					ClientSpace.myShipXpos = received.myShipXpos;
-					ClientSpace.myShipYpos = received.myShipYpos;
-					ClientSpace.myShipLaser = received.myShipLaser;
-					
-					ClientSpace.otherShipXpos = received.otherShipXpos;
-					ClientSpace.otherShipYpos = received.otherShipYpos;
-					ClientSpace.otherShipLaser = received.otherShipLaser;
-					
-					ClientSpace.alienShipXpos = received.alienShipXpos;
-					ClientSpace.alienShipYpos = received.alienShipYpos;
-					ClientSpace.alienShipLaser = received.alienShipLaser;
-							
+					//System.out.println(">ClientReceived> " +received.Aliens.firstElement().getAlienShipXpos());
 				}
 			}
 			catch (Exception ex)
@@ -85,7 +73,7 @@ public class NetClient extends NetConnection
 		}
 	}
 	
-	public void send()
+	public void send( ShipControl CntToSend )
 	{
 		if (out == null)
 			return;
@@ -93,9 +81,9 @@ public class NetClient extends NetConnection
 		{
 			ShipControl SendCnt = new ShipControl();
 			
-			SendCnt.ShipXdir = ClientCnt.ShipXdir;
-			SendCnt.ShipYdir = ClientCnt.ShipYdir;
-			SendCnt.ShipLaser = ClientCnt.ShipLaser;
+			SendCnt.ShipXdir = CntToSend.ShipXdir;
+			SendCnt.ShipYdir = CntToSend.ShipYdir;
+			SendCnt.ShipLaser = CntToSend.ShipLaser;
 			
 			out.writeObject(SendCnt);
 			out.flush();

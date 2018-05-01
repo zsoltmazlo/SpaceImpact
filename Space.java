@@ -6,7 +6,6 @@ import java.util.Vector;
 
 public class Space implements java.io.Serializable
 {
-	
 	private static final long serialVersionUID = 1L;
 	
 	
@@ -30,6 +29,5 @@ public class Space implements java.io.Serializable
 	public Vector<AlienShip> Aliens = new Vector<AlienShip>(0);
 	
 	//--- Game border ---
-	
 	
 }

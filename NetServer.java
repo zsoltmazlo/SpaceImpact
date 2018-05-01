@@ -11,15 +11,13 @@ import java.net.Socket;
 public class NetServer extends NetConnection
 {
 
-	private Space ServerSpace;
-	public ShipControl ServerCnt = new ShipControl();
+	private GameCore ServerCore;
 	
 	
-	public void SetServerSpace (Space GameSpace)
+	NetServer(GameCore CoreToReceive)
 	{
-		ServerSpace = GameSpace;
+		ServerCore = CoreToReceive;
 	}
-	
 	
 	private ServerSocket serverSocket = null;
 	private Socket clientSocket = null;
@@ -62,10 +60,7 @@ public class NetServer extends NetConnection
 				while (true)
 				{
 					ShipControl SrvTestControll  = (ShipControl) in.readObject();
-					
-					ServerCnt.ShipXdir = SrvTestControll.ShipXdir;
-					ServerCnt.ShipYdir = SrvTestControll.ShipYdir;
-					ServerCnt.ShipLaser = SrvTestControll.ShipLaser;
+					ServerCore.otherControl = SrvTestControll;
 				}
 			}
 			catch (Exception ex)
@@ -96,24 +91,36 @@ public class NetServer extends NetConnection
 		}
 	}
 	
-	public void send() {
+	public void send(Space SpaceToSend) {
 		if (out == null)
 			return;
 		try
 		{
 			Space SendSpace = new Space();
 			
-			SendSpace.myShipXpos = ServerSpace.myShipXpos;
-			SendSpace.myShipYpos = ServerSpace.myShipYpos;
-			SendSpace.myShipLaser = ServerSpace.myShipLaser;
+			SendSpace.myShipXpos = SpaceToSend.myShipXpos;
+			SendSpace.myShipYpos = SpaceToSend.myShipYpos;
+			SendSpace.myShipLaser = SpaceToSend.myShipLaser;
 			
-			SendSpace.otherShipXpos = ServerSpace.otherShipXpos;
-			SendSpace.otherShipYpos = ServerSpace.otherShipYpos;
-			SendSpace.otherShipLaser = ServerSpace.otherShipLaser;
+			SendSpace.otherShipXpos = SpaceToSend.otherShipXpos;
+			SendSpace.otherShipYpos = SpaceToSend.otherShipYpos;
+			SendSpace.otherShipLaser = SpaceToSend.otherShipLaser;
 			
-			SendSpace.alienShipXpos = ServerSpace.alienShipXpos;
-			SendSpace.alienShipYpos = ServerSpace.alienShipYpos;
-			SendSpace.alienShipLaser = ServerSpace.alienShipLaser;
+			SendSpace.alienShipXpos = SpaceToSend.alienShipXpos;
+			SendSpace.alienShipYpos = SpaceToSend.alienShipYpos;
+			SendSpace.alienShipLaser = SpaceToSend.alienShipLaser;
+			
+			for (int i=0; i < SpaceToSend.Meteors.size(); i++)
+			{
+				SendSpace.Meteors.addElement( SpaceToSend.Meteors.get(i) );
+			}
+			
+			for (int i=0; i < SpaceToSend.Aliens.size(); i++)
+			{
+				SendSpace.Aliens.addElement( SpaceToSend.Aliens.get(i) );
+			}
+			
+			//System.out.println(">ServerSend> " +SendSpace.Aliens.firstElement().getAlienShipXpos());
 			
 			out.writeObject(SendSpace);
 			out.flush();
